@@ -1,0 +1,19 @@
+# Configuration file for handwriting OCR project
+name: "realtime-handwriting-ocr"
+version: 1.0
+active: true
+technologies:
+- Python
+- TensorFlow
+- OpenCV
+
+# Training data configuration
+training_data:
+  batch_size: 128
+  epochs: 50
+  validation_split: 0.2
+  callbacks_path_checkpoints: "./models/checkpoints/"
+  callbacks_path_csvlogger: "./data/results/"
+  callbacks_path_tensorboard: "./data/results/"
+  model_save_path: "./models/save/"
+# Inference configuration
