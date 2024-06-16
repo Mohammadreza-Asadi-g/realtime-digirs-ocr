@@ -1,9 +1,8 @@
 from tensorflow.keras.models import load_model
-import yaml
+from src.utils import read_config
 
-with open("./configs/configurations.yaml", 'r') as file:
-    config = yaml.safe_load(file)
 
+config = read_config()
 model = load_model(config["training_data"]["model_save_path"] + 'model.h5')
 
 def ocr(image):

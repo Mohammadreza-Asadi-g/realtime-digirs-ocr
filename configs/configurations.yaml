@@ -16,4 +16,7 @@ training_data:
   callbacks_path_csvlogger: "./data/results/"
   callbacks_path_tensorboard: "./data/results/"
   model_save_path: "./models/save/"
+
 # Inference configuration
+inference:
+  images_path: "data/inference images/"

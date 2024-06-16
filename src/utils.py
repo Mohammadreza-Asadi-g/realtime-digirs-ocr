@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
+
+def read_config():
+    with open("./configs/configurations.yaml", 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
 def plot_results(model_history):
     train_accuracy = model_history.history['accuracy']
