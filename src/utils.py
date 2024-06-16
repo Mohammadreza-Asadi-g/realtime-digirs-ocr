@@ -24,6 +24,6 @@ def plot_predicts(model, X_test, test_labels, test_images, number_of_predictions
             break
         if (test_labels_pred[i] == test_labels[i]):
             axs[n].imshow(test_images[i], cmap='gray')
-            axs[n].set_title(f'{test_labels[i]} -> {test_labels_pred[i]}')
+            axs[n].set_title(f'{test_labels_pred[i]}')
             axs[n].axis('off')
             n += 1
