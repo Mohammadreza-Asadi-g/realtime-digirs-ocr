@@ -20,7 +20,7 @@ if __name__ == '__main__':
     from segmentation import digits_segmentaion
     import cv2 as cv
     image = cv.imread(config["inference"]["images_path"] + "numbers_1.jpg")
-    digits_concat = digits_segmentaion(image,
+    digits_concat, contours_min_location = digits_segmentaion(image,
                                        config["inference"]["segmentation_threshold_value"],
                                        config["inference"]["segmentation_digit_min_area"],
                                        config["inference"]["segmentation_digit_crop_offset"])

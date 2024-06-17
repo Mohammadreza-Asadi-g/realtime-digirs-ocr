@@ -63,6 +63,24 @@ def digits_crop(image, contours, offset, save_digits=False):
         num += 1
     return digits
 
+def contour_mins(contours):
+    contours_min_location = []  
+    for cnt in contours:
+        # Initialize min_x and min_y with large values
+        min_x, min_y = float('inf'), float('inf')
+        min_x_list = []; min_y_list = []
+        
+        # Iterate over the contour points
+        for point in cnt:
+            x, y = point[0]
+            
+            # Update min_x and min_y
+            min_x = min(min_x, x); min_x_list.append(min_x)
+            min_y = min(min_y, y); min_y_list.append(min_y)
+            
+        contours_min_location.append([min(min_x_list), min(min_y_list)])
+    return contours_min_location
+   
 def digits_segmentaion(image, threshold_value=150, digit_min_area=100, digit_crop_offset=10):
     image_gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     _, image_threshold = cv.threshold(image_gray, threshold_value, 255, cv.THRESH_BINARY_INV)
@@ -72,15 +90,18 @@ def digits_segmentaion(image, threshold_value=150, digit_min_area=100, digit_cro
     sorted_contours = contour_sorted(filtered_contours)
     digits = digits_crop(image, sorted_contours, offset=digit_crop_offset)
     digits_concat = np.stack(digits)
+    
+    contours_min_location = contour_mins(sorted_contours)
 
-    return digits_concat
+    return digits_concat, contours_min_location
 
 if __name__ == '__main__':
     from utils import read_config
     config = read_config()
     image = cv.imread(config["inference"]["images_path"] + "numbers_1.jpg")
-    segmented_digits = digits_segmentaion(image)
+    segmented_digits, contours_min_location = digits_segmentaion(image)
     print(segmented_digits.shape)
+    print(contours_min_location)
     show(segmented_digits[9])
 
 

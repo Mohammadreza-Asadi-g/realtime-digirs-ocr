@@ -24,7 +24,7 @@ def draw_roi(event, x, y, flags, param):
         drawing = False
         cv.rectangle(img, (start_x, start_y), (x, y), (0, 255, 0), 2)
         cv.imshow('Camera', img)
-        cv.imwrite("r.png", img[start_y+3:y-3, start_x+3:x-3])
+        # cv.imwrite("r.png", img[start_y+3:y-3, start_x+3:x-3])
         start_x = start_x+3; start_y = start_y+3; end_x = x-3; end_y = y-3
     elif event == cv.EVENT_MOUSEMOVE and drawing:
         img_copy = img.copy()
@@ -54,8 +54,8 @@ while True:
                 camera_focus = True
         else:
             if first_shot:  # Drawing RoI
-                cv.putText(frame, "Draw Table RoI", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
-                cv.putText(frame, "(Push 'space' when RoI is drawn)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                cv.putText(frame, "Draw RoI", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
+                cv.putText(frame, "(Double push 'space' when RoI is drawn)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
                 cv.imshow('Camera', frame)
                 cv.waitKey(0)
                 first_shot = False
@@ -68,15 +68,21 @@ while True:
         if key == ord(' ') or key == cv.EVENT_RBUTTONDOWN:
             cv.imshow('Camera', frame)
             roi_img = frame[start_y:end_y, start_x:end_x]
-            digits_concat = digits_segmentaion(roi_img,
-                                               config["inference"]["segmentation_threshold_value"],
-                                               config["inference"]["segmentation_digit_min_area"],
-                                               config["inference"]["segmentation_digit_crop_offset"])
-            labels = ocr(digits_concat)
-            print(labels)
-
+            try:
+                digits_concat, contours_min_location = digits_segmentaion(roi_img,
+                                                    config["inference"]["segmentation_threshold_value"],
+                                                    config["inference"]["segmentation_digit_min_area"],
+                                                    config["inference"]["segmentation_digit_crop_offset"])
+                labels = ocr(digits_concat)
+                print(labels)
+                print(contours_min_location)
+            except:
+                print("Digit not found")
             # Draw the recognized digits on the frame
-            cv.putText(frame, str(labels), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            l = 0
+            for loc in contours_min_location:
+                cv.putText(frame, str(labels[l]), (loc[0]+start_x, loc[1]+start_y-10), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                l += 1
             cv.imshow('Camera', frame)
 
 
