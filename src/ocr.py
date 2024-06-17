@@ -1,5 +1,8 @@
 from tensorflow.keras.models import load_model
-from utils import read_config
+try:
+    from src.utils import read_config
+except:
+    from utils import read_config
 import numpy as np
 
 
@@ -16,8 +19,6 @@ def ocr(digits_concat):
 if __name__ == '__main__':
     from segmentation import digits_segmentaion
     import cv2 as cv
-    from utils import read_config
-    config = read_config()
     image = cv.imread(config["inference"]["images_path"] + "numbers_1.jpg")
     digits_concat = digits_segmentaion(image,
                                        config["inference"]["segmentation_threshold_value"],
