@@ -1,3 +1,5 @@
+from src.segmentation import digits_segmentaion
+from src.ocr import ocr
 import cv2 as cv
 
 # Using Phone Camera

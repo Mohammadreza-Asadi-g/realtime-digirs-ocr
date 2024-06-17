@@ -20,3 +20,6 @@ training_data:
 # Inference configuration
 inference:
   images_path: "data/inference images/"
+  segmentation_threshold_value: 150
+  segmentation_digit_min_area: 100
+  segmentation_digit_crop_offset: 15

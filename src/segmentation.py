@@ -1,4 +1,3 @@
-from utils import read_config
 import cv2 as cv
 import numpy as np
 
@@ -31,7 +30,7 @@ def contour_filter(contours, min_area):
     filtered_contours = [cnt for cnt in contours if cv.contourArea(cnt) >= min_area]
     return filtered_contours
 
-def digits_crop(contours, offset, save_digits=False):
+def digits_crop(image, contours, offset, save_digits=False):
     num = 0
     digits = []
     for cnt in contours:
@@ -71,12 +70,13 @@ def digits_segmentaion(image, threshold_value=150, digit_min_area=100, digit_cro
     contours, _ = cv.findContours(image_threshold, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     filtered_contours = contour_filter(contours, min_area=digit_min_area)
     sorted_contours = contour_sorted(filtered_contours)
-    digits = digits_crop(sorted_contours, offset=digit_crop_offset)
+    digits = digits_crop(image, sorted_contours, offset=digit_crop_offset)
     digits_concat = np.stack(digits)
 
     return digits_concat
 
 if __name__ == '__main__':
+    from utils import read_config
     config = read_config()
     image = cv.imread(config["inference"]["images_path"] + "numbers_1.jpg")
     segmented_digits = digits_segmentaion(image)
