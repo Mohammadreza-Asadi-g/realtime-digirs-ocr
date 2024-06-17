@@ -51,27 +51,26 @@ cv.setMouseCallback('Camera', draw_roi)
 while(True):
     ret, frame = cap.read()
     if ret == True:
-        if frame_crop == False:
-            if camera_focus == False:  # Setting up the camera focus
-                cv.putText(frame, "Focus Your Camera", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
-                cv.putText(frame, "(Push 'space' when focus is adjusted)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+        # if frame_crop == False:
+        if camera_focus == False:  # Setting up the camera focus
+            cv.putText(frame, "Focus Your Camera", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
+            cv.putText(frame, "(Push 'space' when focus is adjusted)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            cv.imshow('Camera', frame)
+            if cv.waitKey(1) & 0xFF == ord(' '):
+                print("Focus is adjusted")
+                camera_focus = True
+        else:				
+            if first_shot == True: # Drawing RoI
+                cv.putText(frame, "Draw Table RoI", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
+                cv.putText(frame, "(Push 'space' when RoI is drawn)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
                 cv.imshow('Camera', frame)
-                if cv.waitKey(1) & 0xFF == ord(' '):
-                    print("Focus is adjusted")
-                    camera_focus = True
-            else:				
-                if first_shot == True: # Drawing RoI
-                    cv.putText(frame, "Draw Table RoI", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
-                    cv.putText(frame, "(Push 'space' when RoI is drawn)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-                    cv.imshow('Camera', frame)
-                    cv.waitKey(0)
-                    first_shot = False
-                    print("Press space when RoI is finished")
-                else:
-                    frame_crop = True
+                cv.waitKey(0)
+                first_shot = False
+                print("Press space when RoI is finished")
+            else:
+                pass
+                # frame_crop = True
 
-                  
-        
         
         # Check for key press or mouse event
         key = cv.waitKey(1) & 0xFF
@@ -93,10 +92,12 @@ while(True):
             # Display the frame with recognized digits
             cv.imshow('Camera', frame)
             if key == ord(' ') or key == cv.EVENT_RBUTTONDOWN:
-                    cv.putText(frame, "Result", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
-                    cv.putText(frame, "(Push 'space' for another try)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-                    cv.imshow('Camera', frame)
-
+                cv.putText(frame, "Result", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
+                cv.putText(frame, "(Push 'space' for another try)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                cv.imshow('Camera', frame)
+                
+        # if key == ord('q'):
+        #     continue	
         # Exit the loop if 'q' is pressed
         if key == ord('q'):
             break		
