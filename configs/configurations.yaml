@@ -3,9 +3,11 @@ name: "realtime-handwriting-ocr"
 version: 1.0
 active: true
 technologies:
-- Python
-- TensorFlow
-- OpenCV
+- Python 3.9.18 
+- TensorFlow 2.6.0
+- OpenCV 4.10.0.82
+- CUDA Toolkit 11.3.1
+- CuDNN 8.2.1
 
 # Training data configuration
 training_data:

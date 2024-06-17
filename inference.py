@@ -6,7 +6,6 @@ import cv2 as cv
 config = read_config()
 
 # Initialize variables
-frame_crop = False
 camera_focus = False
 first_shot = True
 drawing = False
