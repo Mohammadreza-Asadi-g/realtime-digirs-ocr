@@ -31,7 +31,7 @@ def contour_filter(contours, min_area):
     filtered_contours = [cnt for cnt in contours if cv.contourArea(cnt) >= min_area]
     return filtered_contours
 
-def digits_crop(contours, offset):
+def digits_crop(contours, offset, save_digits=False):
     num = 0
     digits = []
     for cnt in contours:
@@ -59,7 +59,8 @@ def digits_crop(contours, offset):
         final_img = cv.resize(image_threshold, (28, 28))
         digits.append(final_img)
         # Save to file
-        # cv.imwrite(f'output_{num}.jpg', final_img, [cv.IMWRITE_JPEG_QUALITY, 10])
+        if save_digits:
+            cv.imwrite(f'output_{num}.jpg', final_img, [cv.IMWRITE_JPEG_QUALITY, 10])
         num += 1
     return digits
 
@@ -72,9 +73,8 @@ def digits_segmentaion(image, threshold_value=150, digit_min_area=100, digit_cro
     sorted_contours = contour_sorted(filtered_contours)
     digits = digits_crop(sorted_contours, offset=digit_crop_offset)
     digits_concat = np.stack(digits)
-    segmented_digits = digits_concat.reshape(len(digits_concat), 28, 28, 1)
-    segmented_digits = segmented_digits.astype('float32') / 255
-    return segmented_digits
+
+    return digits_concat
 
 if __name__ == '__main__':
     config = read_config()
