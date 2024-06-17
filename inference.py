@@ -71,13 +71,14 @@ while(True):
                     frame_crop = True
 
                   
-        cv.imshow('Camera', frame)
+        
         
         # Check for key press or mouse event
         key = cv.waitKey(1) & 0xFF
             
         # Perform OCR if space key is pressed or right mouse button is clicked
         if key == ord(' ') or key == cv.EVENT_RBUTTONDOWN:
+            cv.imshow('Camera', frame)
             roi_img = frame[start_y:end_y, start_x:end_x]
             digits_concat = digits_segmentaion(roi_img,
                                             config["inference"]["segmentation_threshold_value"],
@@ -91,9 +92,10 @@ while(True):
 
             # Display the frame with recognized digits
             cv.imshow('Camera', frame)
-
-            # Reset the OCR flag
-            perform_ocr_flag = False
+            if key == ord(' ') or key == cv.EVENT_RBUTTONDOWN:
+                    cv.putText(frame, "Result", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3) 
+                    cv.putText(frame, "(Push 'space' for another try)", (10, 70), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                    cv.imshow('Camera', frame)
 
         # Exit the loop if 'q' is pressed
         if key == ord('q'):
