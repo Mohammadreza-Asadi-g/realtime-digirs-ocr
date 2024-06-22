@@ -30,7 +30,7 @@ def contour_filter(contours, min_area):
     filtered_contours = [cnt for cnt in contours if cv.contourArea(cnt) >= min_area]
     return filtered_contours
 
-def digits_crop(image, contours, offset, save_digits=False):
+def digits_crop(image, height, width, contours, offset, save_digits=False):
     num = 0
     digits = []
     for cnt in contours:
@@ -53,9 +53,9 @@ def digits_crop(image, contours, offset, save_digits=False):
         image_gray = cv.cvtColor(crop, cv.COLOR_BGR2GRAY)
         _, image_threshold = cv.threshold(image_gray, 150, 255, cv.THRESH_BINARY_INV)        
         # Get dimensions for saving
-        height, width = crop.shape[:2]
+        # height, width = crop.shape[:2]
         
-        final_img = cv.resize(image_threshold, (28, 28))
+        final_img = cv.resize(image_threshold, (height, width))
         digits.append(final_img)
         # Save to file
         if save_digits:
@@ -81,14 +81,14 @@ def contour_mins(contours):
         contours_min_location.append([min(min_x_list), min(min_y_list)])
     return contours_min_location
    
-def digits_segmentaion(image, threshold_value=150, digit_min_area=100, digit_crop_offset=10):
+def digits_segmentaion(image, height=100, width=100, threshold_value=150, digit_min_area=100, digit_crop_offset=10):
     image_gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     _, image_threshold = cv.threshold(image_gray, threshold_value, 255, cv.THRESH_BINARY_INV)
     # Find contours
     contours, _ = cv.findContours(image_threshold, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     filtered_contours = contour_filter(contours, min_area=digit_min_area)
     sorted_contours = contour_sorted(filtered_contours)
-    digits = digits_crop(image, sorted_contours, offset=digit_crop_offset)
+    digits = digits_crop(image, height, width, sorted_contours, offset=digit_crop_offset)
     digits_concat = np.stack(digits)
     
     contours_min_location = contour_mins(sorted_contours)
@@ -102,6 +102,7 @@ if __name__ == '__main__':
     segmented_digits, contours_min_location = digits_segmentaion(image)
     print(segmented_digits.shape)
     print(contours_min_location)
-    show(segmented_digits[9])
+    for i in range(10):
+        show(segmented_digits[i])
 
 
